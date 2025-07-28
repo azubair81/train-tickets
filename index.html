@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ZZG Ticket Validator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    .green-flash {
+      animation: flashGreen 0.5s 3;
+    }
+    .red-flash {
+      animation: flashRed 0.5s 3;
+    }
+    @keyframes flashGreen {
+      0%, 100% { background-color: white; }
+      50% { background-color: #ccffcc; }
+    }
+    @keyframes flashRed {
+      0%, 100% { background-color: white; }
+      50% { background-color: #ffcccc; }
+    }
+    .ticket {
+      font-size: 1.4em;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>ZZG Train Ticket Validator</h1>
+  <div id="result" class="ticket">Loading...</div>
+
+  <audio id="realSound" src="bell.mp3"></audio>
+  <audio id="fakeSound" src="alarm.mp3"></audio>
+
+  <script>
+    const passengers = {
+      DINO_TICKET: { name: "Dino", seat: "11 (Window)", from: "Coco", to: "Sunny", coach: "A", time: "12PM", date: "July 28, 2025" },
+      DUCKY_TICKET: { name: "Ducky", seat: "9 (Aisle)", from: "Lulu", to: "Bunny", coach: "B", time: "1PM", date: "July 28, 2025" },
+      QUACK_TICKET: { name: "Quack", seat: "5 (Window)", from: "Zany", to: "Monty", coach: "C", time: "2PM", date: "July 28, 2025" },
+      BLUEY_TICKET: { name: "Bluey", seat: "2 (Aisle)", from: "Juno", to: "Zara", coach: "D", time: "3PM", date: "July 28, 2025" },
+      LILY_TICKET: { name: "Lily", seat: "14 (Window)", from: "Momo", to: "Tina", coach: "E", time: "4PM", date: "July 28, 2025" }
+    };
+
+    function getParam(key) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(key);
+    }
+
+    function validateTicket() {
+      const type = getParam("type");
+      const id = getParam("id");
+      const resultDiv = document.getElementById("result");
+      const realSound = document.getElementById("realSound");
+      const fakeSound = document.getElementById("fakeSound");
+
+      if (type === "real" && passengers[id]) {
+        const p = passengers[id];
+        resultDiv.innerHTML = `
+          ✅ <strong>Ticket for ${p.name}</strong><br/>
+          Seat: ${p.seat}<br/>
+          From: ${p.from} → To: ${p.to}<br/>
+          Coach: ${p.coach} | Time: ${p.time}<br/>
+          Date: ${p.date}
+        `;
+        document.body.classList.add("green-flash");
+        realSound.play();
+      } else if (type === "fake") {
+        resultDiv.innerHTML = `<span style="color:red; font-weight:bold; font-size:1.5em;">🚨 Imposter Alert! Call Police. Fake Ticket.</span>`;
+        document.body.classList.add("red-flash");
+        fakeSound.play();
+      } else {
+        resultDiv.textContent = "No ticket data found.";
+      }
+    }
+
+    validateTicket();
+  </script>
+</body>
+</html>

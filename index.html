@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Validator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+</head>
+<body class="bg-gray-100 p-10 font-sans">
+    <div class="max-w-xl mx-auto bg-white p-8 rounded shadow">
+        <h1 class="text-2xl font-bold mb-4 text-center">Toy Train Ticket Validator</h1>
+        <div class="mb-4">
+            <input id="ticketIdInput" type="text" placeholder="Enter Ticket ID" class="w-full p-2 border rounded" />
+        </div>
+        <button id="validateBtn" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Validate Ticket</button>
+        <div id="message" class="mt-4 text-center text-lg font-semibold"></div>
+    </div>
+
+    <script>
+        const passengerTickets = {
+            "dino": {{
+                real: {{ type: "real", id: "REAL_TRAIN_TICKET_DINO_001" }},
+                fake: {{ type: "fake", id: "FAKE_TRAIN_TICKET_DINO_001" }}
+            }},
+            "ducky": {{
+                real: {{ type: "real", id: "REAL_TRAIN_TICKET_DUCKY_001" }},
+                fake: {{ type: "fake", id: "FAKE_TRAIN_TICKET_DUCKY_001" }}
+            }},
+            "quack": {{
+                real: {{ type: "real", id: "REAL_TRAIN_TICKET_QUACK_001" }},
+                fake: {{ type: "fake", id: "FAKE_TRAIN_TICKET_QUACK_001" }}
+            }},
+            "bluey": {{
+                real: {{ type: "real", id: "REAL_TRAIN_TICKET_BLUEY_001" }},
+                fake: {{ type: "fake", id: "FAKE_TRAIN_TICKET_BLUEY_001" }}
+            }},
+            "lily": {{
+                real: {{ type: "real", id: "REAL_TRAIN_TICKET_LILY_001" }},
+                fake: {{ type: "fake", id: "FAKE_TRAIN_TICKET_LILY_001" }}
+            }}
+        };
+
+        const dingSynth = new Tone.Synth().toDestination();
+        const alarmSynth = new Tone.Synth({ oscillator: {{ type: "sawtooth" }} }).toDestination();
+
+        let initializedTone = false;
+        async function initializeAudio() {{
+            if (!initializedTone) {{
+                await Tone.start();
+                initializedTone = true;
+            }}
+        }}
+
+        function playDing() {{
+            initializeAudio().then(() => {{
+                dingSynth.triggerAttackRelease("C5", "8n");
+                dingSynth.triggerAttackRelease("G5", "8n", Tone.now() + 0.1);
+            }});
+        }}
+
+        function playAlarm() {{
+            initializeAudio().then(() => {{
+                const now = Tone.now();
+                alarmSynth.triggerAttackRelease("C4", "0.5", now);
+                alarmSynth.triggerAttackRelease("C#4", "0.5", now + 0.5);
+                alarmSynth.triggerAttackRelease("C4", "0.5", now + 1);
+                alarmSynth.triggerAttackRelease("C#4", "0.5", now + 1.5);
+            }});
+        }}
+
+        document.getElementById("validateBtn").addEventListener("click", function() {{
+            const ticketId = document.getElementById("ticketIdInput").value.trim().toUpperCase();
+            let found = false;
+
+            for (const passenger in passengerTickets) {{
+                const tickets = passengerTickets[passenger];
+                if (tickets.real.id === ticketId) {{
+                    document.getElementById("message").textContent = `✅ REAL ticket for ${passenger.toUpperCase()}`;
+                    document.getElementById("message").className = "mt-4 text-green-600 text-center text-lg font-semibold";
+                    playDing();
+                    found = true;
+                    break;
+                }} else if (tickets.fake.id === ticketId) {{
+                    document.getElementById("message").textContent = `🚨 FAKE ticket for ${passenger.toUpperCase()}`;
+                    document.getElementById("message").className = "mt-4 text-red-600 text-center text-lg font-semibold";
+                    playAlarm();
+                    found = true;
+                    break;
+                }}
+            }}
+
+            if (!found) {{
+                document.getElementById("message").textContent = "❓ Ticket not recognized";
+                document.getElementById("message").className = "mt-4 text-gray-600 text-center text-lg font-semibold";
+            }}
+        }});
+    </script>
+</body>
+</html>

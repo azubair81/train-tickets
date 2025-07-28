@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printable Toy Train Tickets</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- QRious library for QR code generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <!-- Tone.js for sound generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .ticket-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        .ticket {
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 20px;
+            background-color: #f8fafc;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .ticket.real {
+            border-color: #4CAF50;
+        }
+        .ticket.fake {
+            border-color: #f44336;
+        }
+        img.qr-code-img {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            max-width: 180px;
+            height: auto;
+            image-rendering: pixelated;
+        }
+        .message-box {
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            background-color: #e2e8f0;
+            border: 1px solid #cbd5e1;
+        }
+        .message-box.real {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .message-box.fake {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: #fff; min-height: auto; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; padding: 10px; max-width: 100%; }
+            .ticket { break-inside: avoid; margin-bottom: 20px; }
+            h1, p { color: black !important; }
+        }
+        @media (max-width: 768px) {
+            .ticket-section { flex-direction: column; align-items: center; }
+            .ticket { max-width: 90%; }
+        }
+        @media (max-width: 600px) {
+            .container { padding: 20px; gap: 20px; }
+            .message-box { font-size: 1rem; min-height: 50px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 no-print">Printable Toy Train Tickets</h1>
+        <p class="text-gray-600 mb-6 no-print">
+            Print this page to get one real and one fake ticket. Scan the QR code with your phone's camera to validate!
+        </p>
+        <div class="ticket-section">
+            <div class="ticket real">
+                <h2 class="text-2xl font-semibold text-gray-700">REAL TRAIN TICKET</h2>
+                <p class="text-gray-600">Valid for one magical journey!</p>
+                <canvas id="qrCanvasReal" class="hidden"></canvas>
+                <img id="qrImageReal" class="qr-code-img" alt="Real Ticket QR Code">
+                <p class="text-sm text-gray-500">Scan me for a ding!</p>
+            </div>
+            <div class="ticket fake">
+                <h2 class="text-2xl font-semibold text-gray-700">FAKE TRAIN TICKET</h2>
+                <p class="text-gray-600">Warning: Imposter aboard!</p>
+                <canvas id="qrCanvasFake" class="hidden"></canvas>
+                <img id="qrImageFake" class="qr-code-img" alt="Fake Ticket QR Code">
+                <p class="text-sm text-gray-500">Scan me for an alarm!</p>
+            </div>
+        </div>
+        <div id="messageBox" class="message-box">
+            Scan a ticket to hear the sound!
+        </div>
+    </div>
+    <script>
+        let initializedTone = false;
+        async function initializeAudioContext() {
+            if (!initializedTone) {
+                await Tone.start();
+                initializedTone = true;
+            }
+        }
+
+        const dingSynth = new Tone.Synth().toDestination();
+        function playDingSound() {
+            initializeAudioContext().then(() => {
+                dingSynth.triggerAttackRelease("C5", "8n");
+                dingSynth.triggerAttackRelease("G5", "8n", Tone.now() + 0.1);
+            });
+        }
+
+        const alarmSynth = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.5, release: 0.5 } }).toDestination();
+        function playFireAlarmSound() {
+            initializeAudioContext().then(() => {
+                const now = Tone.now();
+                alarmSynth.triggerAttackRelease("C4", "0.5", now);
+                alarmSynth.triggerAttackRelease("C#4", "0.5", now + 0.5);
+                alarmSynth.triggerAttackRelease("C4", "0.5", now + 1);
+            });
+        }
+
+        const qrCanvasReal = document.getElementById('qrCanvasReal');
+        const qrImageReal = document.getElementById('qrImageReal');
+        const qrCanvasFake = document.getElementById('qrCanvasFake');
+        const qrImageFake = document.getElementById('qrImageFake');
+        const messageBox = document.getElementById('messageBox');
+
+        function generateTicketQR(canvasElement, imgElement, type) {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const ticketId = `${type.toUpperCase()}_TRAIN_TICKET_${Date.now()}`;
+            const qrContent = `${baseUrl}?type=${type}&id=${ticketId}`;
+            const qr = new QRious({ element: canvasElement, size: 200, padding: 10, value: qrContent });
+            imgElement.src = canvasElement.toDataURL();
+        }
+
+        function checkTicketValidation() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ticketType = urlParams.get('type');
+            const ticketId = urlParams.get('id');
+
+            if (ticketType) {
+                if (ticketType === 'real') {
+                    messageBox.textContent = `REAL Ticket Validated! ID: ${ticketId || 'N/A'}`;
+                    messageBox.classList.remove('fake');
+                    messageBox.classList.add('real');
+                    playDingSound();
+                } else if (ticketType === 'fake') {
+                    messageBox.textContent = `FAKE Ticket Detected! ALARM! ID: ${ticketId || 'N/A'}`;
+                    messageBox.classList.remove('real');
+                    messageBox.classList.add('fake');
+                    playFireAlarmSound();
+                }
+                history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            generateTicketQR(qrCanvasReal, qrImageReal, 'real');
+            generateTicketQR(qrCanvasFake, qrImageFake, 'fake');
+            checkTicketValidation();
+        });
+
+        document.body.addEventListener('click', initializeAudioContext, { once: true });
+        document.body.addEventListener('touchstart', initializeAudioContext, { once: true });
+    </script>
+</body>
+</html>

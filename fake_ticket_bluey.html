@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fake Ticket - Bluey</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff0f0;
+      color: #000;
+      text-align: center;
+      padding-top: 50px;
+      transition: background-color 0.5s ease;
+    }
+    .red-bg { background-color: #ff7f7f; }
+    .btn {
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: #e53935;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚨 ALERT 🚨</h1>
+  <h2>FAKE TICKET DETECTED</h2>
+  <p>This ticket is not valid for: <strong>Bluey</strong></p>
+  <p><strong>CALL POLICE IMMEDIATELY</strong></p>
+
+  <button class="btn" onclick="activate()">Tap to Scan</button>
+
+  <audio id="beep" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+
+  <script>
+    function activate() {
+      document.body.classList.add('red-bg');
+      let beep = document.getElementById('beep');
+      beep.play();
+      setTimeout(() => beep.play(), 300);
+      setTimeout(() => beep.play(), 600);
+    }
+  </script>
+</body>
+</html>

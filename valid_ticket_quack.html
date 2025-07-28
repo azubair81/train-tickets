@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Valid Ticket - Quack</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0fff0;
+      color: #000;
+      text-align: center;
+      padding-top: 50px;
+      transition: background-color 0.5s ease;
+    }
+    .green-bg { background-color: #a5f3a1; }
+    .btn {
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>✅ Valid Train Ticket</h1>
+  <h2>ZZG GOLDEN EXPRESS</h2>
+  <p><strong>Passenger:</strong> Quack</p>
+  <p><strong>From:</strong> Coco &nbsp;&nbsp; <strong>To:</strong> Sunny</p>
+  <p><strong>Seat:</strong> 13 (Window) &nbsp;&nbsp; <strong>Coach:</strong> 1</p>
+  <p><strong>Date:</strong> July 28, 2025 &nbsp;&nbsp; <strong>Time:</strong> 12:00 PM</p>
+
+  <button class="btn" onclick="activate()">Tap to Confirm Ticket</button>
+
+  <audio id="beep" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+
+  <script>
+    function activate() {
+      document.body.classList.add('green-bg');
+      document.getElementById('beep').play();
+    }
+  </script>
+</body>
+</html>

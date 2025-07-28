@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toy Train Ticket Validator</title>
+    <title>Printable Toy Train Tickets</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Inter font -->
@@ -15,7 +15,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
+            background-color: #f0f4f8; /* Light blue-gray background */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,52 +26,49 @@
         }
         .container {
             background-color: #ffffff;
-            border-radius: 16px;
+            border-radius: 16px; /* More rounded corners */
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             padding: 30px;
             text-align: center;
-            max-width: 500px;
+            max-width: 800px; /* Wider to accommodate two tickets */
             width: 100%;
             display: flex;
             flex-direction: column;
             gap: 25px;
         }
-        .btn {
-            padding: 14px 28px;
+        .ticket-section {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center;
+            gap: 30px; /* Space between tickets */
+        }
+        .ticket {
+            border: 2px solid #cbd5e1;
             border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            font-size: 1.1rem;
+            padding: 20px;
+            background-color: #f8fafc; /* Slightly off-white for ticket background */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            width: 100%; /* Default to full width on small screens */
+            max-width: 350px; /* Max width for each ticket */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
-        .btn-real {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
+        .ticket.real {
+            border-color: #4CAF50; /* Green border for real ticket */
         }
-        .btn-real:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        .ticket.fake {
+            border-color: #f44336; /* Red border for fake ticket */
         }
-        .btn-fake {
-            background-color: #f44336;
-            color: white;
-            border: none;
-        }
-        .btn-fake:hover {
-            background-color: #da3329;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
-        img {
+        img.qr-code-img {
             display: block;
             margin: 0 auto;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            max-width: 100%;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            max-width: 180px; /* Smaller QR code for printing */
             height: auto;
+            image-rendering: pixelated; /* Helps keep QR code sharp when scaled */
         }
         .message-box {
             padding: 15px;
@@ -79,32 +76,63 @@
             font-size: 1.1rem;
             font-weight: 600;
             margin-top: 20px;
-            min-height: 60px;
+            min-height: 60px; /* Ensure consistent height */
             display: flex;
             align-items: center;
             justify-content: center;
             color: #333;
-            background-color: #e2e8f0;
+            background-color: #e2e8f0; /* Light gray */
             border: 1px solid #cbd5e1;
         }
         .message-box.real {
-            background-color: #d4edda;
-            color: #155724;
+            background-color: #d4edda; /* Light green */
+            color: #155724; /* Dark green text */
             border-color: #c3e6cb;
         }
         .message-box.fake {
-            background-color: #f8d7da;
-            color: #721c24;
+            background-color: #f8d7da; /* Light red */
+            color: #721c24; /* Dark red text */
             border-color: #f5c6cb;
+        }
+        /* Hide buttons on print */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: #fff;
+                min-height: auto;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 10px;
+                max-width: 100%;
+            }
+            .ticket {
+                break-inside: avoid; /* Prevent tickets from breaking across pages */
+                margin-bottom: 20px; /* Add space between tickets when printing */
+            }
+            h1, p {
+                color: black !important; /* Ensure text is black for printing */
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .ticket-section {
+                flex-direction: column; /* Stack tickets vertically on smaller screens */
+                align-items: center;
+            }
+            .ticket {
+                max-width: 90%; /* Adjust max-width for single column */
+            }
         }
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
                 gap: 20px;
-            }
-            .btn {
-                padding: 12px 20px;
-                font-size: 1rem;
             }
             .message-box {
                 font-size: 1rem;
@@ -115,21 +143,67 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">Toy Train Ticket Validator</h1>
-        <p class="text-gray-600 mb-6">Generate a real or fake ticket. Scan the QR code with your phone's camera. If it's a real ticket, you'll hear a "ding"! If it's fake, prepare for the "fire alarm"!</p>
-        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-6">
-            <button id="generateRealBtn" class="btn btn-real">Generate Real Ticket</button>
-            <button id="generateFakeBtn" class="btn btn-fake">Generate Fake Ticket</button>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 no-print">Printable Toy Train Tickets</h1>
+
+        <p class="text-gray-600 mb-6 no-print">
+            Print this page to get one real and one fake ticket.
+            Scan the QR code with your phone's camera to validate!
+        </p>
+
+        <div class="ticket-section">
+            <!-- Real Ticket -->
+            <div class="ticket real">
+                <h2 class="text-2xl font-semibold text-gray-700">REAL TRAIN TICKET</h2>
+                <p class="text-gray-600">Valid for one magical journey!</p>
+                <canvas id="qrCanvasReal" class="hidden"></canvas> <!-- Hidden canvas for QR generation -->
+                <img id="qrImageReal" class="qr-code-img" alt="Real Ticket QR Code">
+                <p class="text-sm text-gray-500">Scan me for a ding!</p>
+            </div>
+
+            <!-- Fake Ticket -->
+            <div class="ticket fake">
+                <h2 class="text-2xl font-semibold text-gray-700">FAKE TRAIN TICKET</h2>
+                <p class="text-gray-600">Warning: Imposter aboard!</p>
+                <canvas id="qrCanvasFake" class="hidden"></canvas> <!-- Hidden canvas for QR generation -->
+                <img id="qrImageFake" class="qr-code-img" alt="Fake Ticket QR Code">
+                <p class="text-sm text-gray-500">Scan me for an alarm!</p>
+            </div>
         </div>
-        <div class="qr-code-display mb-6">
-            <h2 class="text-xl font-semibold text-gray-700 mb-3" id="qrTitle"></h2>
-            <canvas id="qrCanvas" class="w-full max-w-xs mx-auto"></canvas>
-            <img id="qrImage" alt="QR Code" class="hidden w-full max-w-xs mx-auto">
+
+        <div id="messageBox" class="message-box">
+            Scan a ticket to hear the sound!
         </div>
-        <div id="messageBox" class="message-box">Generate a ticket to begin!</div>
     </div>
+
     <script>
+        // Initialize Firebase variables (provided by Canvas environment)
+        // These variables are typically injected by the Canvas environment.
+        // For local GitHub hosting, they won't be defined, which is fine as
+        // this app doesn't rely on Firebase for its core functionality.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Ensure Tone.js is initialized
+        let initializedTone = false;
+        async function initializeAudioContext() {
+            if (!initializedTone) {
+                await Tone.start();
+                console.log("AudioContext initialized.");
+                initializedTone = true;
+            }
+        }
+
+        // Create a simple ding sound (like an airport boarding pass scan)
         const dingSynth = new Tone.Synth().toDestination();
+        function playDingSound() {
+            initializeAudioContext().then(() => {
+                dingSynth.triggerAttackRelease("C5", "8n"); // C5 note for an 8th note duration
+                dingSynth.triggerAttackRelease("G5", "8n", Tone.now() + 0.1); // G5 note slightly after
+            }).catch(e => console.error("Error playing ding sound:", e));
+        }
+
+        // Create a simple fire alarm sound (more jarring)
         const alarmSynth = new Tone.Synth({
             oscillator: { type: "sawtooth" },
             envelope: {
@@ -139,19 +213,7 @@
                 release: 0.5,
             }
         }).toDestination();
-        let initializedTone = false;
-        async function initializeAudioContext() {
-            if (!initializedTone) {
-                await Tone.start();
-                initializedTone = true;
-            }
-        }
-        function playDingSound() {
-            initializeAudioContext().then(() => {
-                dingSynth.triggerAttackRelease("C5", "8n");
-                dingSynth.triggerAttackRelease("G5", "8n", Tone.now() + 0.1);
-            });
-        }
+
         function playFireAlarmSound() {
             initializeAudioContext().then(() => {
                 const now = Tone.now();
@@ -159,39 +221,47 @@
                 alarmSynth.triggerAttackRelease("C#4", "0.5", now + 0.5);
                 alarmSynth.triggerAttackRelease("C4", "0.5", now + 1);
                 alarmSynth.triggerAttackRelease("C#4", "0.5", now + 1.5);
-            });
+            }).catch(e => console.error("Error playing fire alarm sound:", e));
         }
-        const generateRealBtn = document.getElementById('generateRealBtn');
-        const generateFakeBtn = document.getElementById('generateFakeBtn');
-        const qrCanvas = document.getElementById('qrCanvas');
-        const qrImage = document.getElementById('qrImage');
-        const qrTitle = document.getElementById('qrTitle');
+
+        // Get DOM elements
+        const qrCanvasReal = document.getElementById('qrCanvasReal');
+        const qrImageReal = document.getElementById('qrImageReal');
+        const qrCanvasFake = document.getElementById('qrCanvasFake');
+        const qrImageFake = document.getElementById('qrImageFake');
         const messageBox = document.getElementById('messageBox');
-        const qr = new QRious({
-            element: qrCanvas,
-            size: 200,
-            padding: 10,
-            value: 'Initial QR code value'
-        });
-        function generateTicketQR(type) {
+
+        /**
+         * Generates and displays a QR code for a specific ticket type.
+         * @param {HTMLCanvasElement} canvasElement - The canvas element to draw on.
+         * @param {HTMLImageElement} imgElement - The image element to display the QR code.
+         * @param {string} type - 'real' or 'fake'.
+         */
+        function generateTicketQR(canvasElement, imgElement, type) {
             const baseUrl = window.location.origin + window.location.pathname;
-            const ticketId = type === 'real' ? `REAL_TRAIN_TICKET_${Date.now()}` : `FAKE_TRAIN_TICKET_${Date.now()}`;
+            const ticketId = `${type.toUpperCase()}_TRAIN_TICKET_${Date.now()}`;
             const qrContent = `${baseUrl}?type=${type}&id=${ticketId}`;
-            qr.value = qrContent;
-            qrImage.src = qrCanvas.toDataURL();
-            qrImage.classList.remove('hidden');
-            qrCanvas.classList.add('hidden');
-            qrTitle.textContent = `Scan this ${type === 'real' ? 'Real' : 'Fake'} Ticket QR Code!`;
-            messageBox.textContent = `QR Code for ${type === 'real' ? 'Real' : 'Fake'} Ticket generated. Scan it with your phone!`;
-            messageBox.classList.remove('real', 'fake');
-            messageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-200');
+
+            const qr = new QRious({
+                element: canvasElement,
+                size: 200, // Size for QR code generation
+                padding: 10,
+                value: qrContent
+            });
+
+            // Set the image source from the canvas
+            imgElement.src = canvasElement.toDataURL();
+            // No need to hide/show canvas/image as canvas is always hidden and image is always shown
         }
-        generateRealBtn.addEventListener('click', () => generateTicketQR('real'));
-        generateFakeBtn.addEventListener('click', () => generateTicketQR('fake'));
+
+        /**
+         * Checks the URL parameters on page load to simulate ticket validation.
+         */
         function checkTicketValidation() {
             const urlParams = new URLSearchParams(window.location.search);
             const ticketType = urlParams.get('type');
             const ticketId = urlParams.get('id');
+
             if (ticketType) {
                 if (ticketType === 'real') {
                     messageBox.textContent = `REAL Ticket Validated! ID: ${ticketId || 'N/A'}`;
@@ -204,17 +274,22 @@
                     messageBox.classList.add('fake');
                     playFireAlarmSound();
                 }
+                // Clear the URL parameters after processing to avoid re-triggering on refresh
                 history.replaceState({}, document.title, window.location.pathname);
             }
         }
+
+        // Generate both QR codes on page load
         window.addEventListener('load', () => {
+            generateTicketQR(qrCanvasReal, qrImageReal, 'real');
+            generateTicketQR(qrCanvasFake, qrImageFake, 'fake');
             checkTicketValidation();
-            qrCanvas.classList.add('hidden');
-            qrImage.classList.remove('hidden');
-            qrImage.src = qrCanvas.toDataURL();
         });
+
+        // Initialize Tone.js on user interaction to bypass browser autoplay policies
         document.body.addEventListener('click', initializeAudioContext, { once: true });
         document.body.addEventListener('touchstart', initializeAudioContext, { once: true });
+
     </script>
 </body>
 </html>

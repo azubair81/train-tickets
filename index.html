@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Train Ticket Validator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 40px; }
+        .result { margin-top: 30px; font-size: 24px; font-weight: bold; }
+        .real { color: green; }
+        .fake { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Toy Train Ticket Validator</h1>
+    <div id="result" class="result">Waiting for scan...</div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const type = params.get("type");
+        const id = params.get("id");
+
+        const realTickets = [
+            "DINO_TICKET",
+            "COCO_TICKET",
+            "SUMMY_TICKET",
+            "LUNA_TICKET",
+            "ROCKY_TICKET"
+        ];
+
+        const resultDiv = document.getElementById("result");
+
+        function playDing() {
+            const synth = new Tone.Synth().toDestination();
+            Tone.start().then(() => {
+                synth.triggerAttackRelease("C5", "8n");
+                synth.triggerAttackRelease("E5", "8n", "+0.2");
+            });
+        }
+
+        function playAlarm() {
+            const synth = new Tone.Synth({ oscillator: { type: "sawtooth" } }).toDestination();
+            Tone.start().then(() => {
+                synth.triggerAttackRelease("C4", "8n");
+                synth.triggerAttackRelease("C4", "8n", "+0.25");
+                synth.triggerAttackRelease("C4", "8n", "+0.5");
+            });
+        }
+
+        if (id && type) {
+            if (type === "real" && realTickets.includes(id)) {
+                resultDiv.textContent = `✅ Real Ticket: ${id}`;
+                resultDiv.classList.add("real");
+                playDing();
+            } else {
+                resultDiv.textContent = `🚨 Fake Ticket Detected: ${id}`;
+                resultDiv.classList.add("fake");
+                playAlarm();
+            }
+        } else {
+            resultDiv.textContent = "No ticket data found.";
+        }
+    </script>
+</body>
+</html>

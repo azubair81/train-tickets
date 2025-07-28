@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Valid Ticket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0fff0;
+      color: #000;
+      text-align: center;
+      padding-top: 50px;
+      transition: background-color 0.5s ease;
+    }
+    .green-bg { background-color: #a5f3a1; }
+    .btn {
+      padding: 20px 40px;
+      font-size: 24px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <h1>✅ Valid Train Ticket</h1>
+  <h2>ZZG GOLDEN EXPRESS</h2>
+  <p><strong>Passengers:</strong> Dino, Ducky, Quack, Bluey, Lily</p>
+  <p><strong>From:</strong> Coco &nbsp;&nbsp; <strong>To:</strong> Sunny</p>
+  <p><strong>Coach:</strong> Seats 11-20 &nbsp;&nbsp; <strong>First Class:</strong> Seats 1-10</p>
+  <p><strong>Date:</strong> July 28, 2025 &nbsp;&nbsp; <strong>Time:</strong> 12:00 PM</p>
+
+  <button class="btn" onclick="activate()">Tap to Confirm Ticket</button>
+
+  <audio id="beep" src="https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg"></audio>
+
+  <script>
+    function activate() {
+      document.body.classList.add('green-bg');
+      document.getElementById('beep').play();
+    }
+  </script>
+</body>
+</html>

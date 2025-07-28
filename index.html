@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Toy Train Ticket Validator&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Tailwind CSS CDN --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Inter font --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- QRious library for QR code generation --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Tone.js for sound generation --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Inter', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f0f4f8; /* Light blue-gray background */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>min-height: 100vh;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-sizing: border-box;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.container {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #ffffff;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 16px; /* More rounded corners */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 30px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-width: 500px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>gap: 25px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 14px 28px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.2s ease-in-out;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.1rem;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn-real {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #4CAF50; /* Green */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn-real:hover {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #45a049;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-2px);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn-fake {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f44336; /* Red */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: white;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.btn-fake:hover {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #da3329;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transform: translateY(-2px);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>img {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: block;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: 2px solid #e2e8f0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-width: 100%; /* Ensure image is responsive */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: auto;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.message-box {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 15px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.1rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-weight: 600;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>min-height: 60px; /* Ensure consistent height */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #333;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #e2e8f0; /* Light gray */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: 1px solid #cbd5e1;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.message-box.real {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #d4edda; /* Light green */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #155724; /* Dark green text */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-color: #c3e6cb;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.message-box.fake {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #f8d7da; /* Light red */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #721c24; /* Dark red text */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-color: #f5c6cb;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Responsive adjustments */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@media (max-width: 600px) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.container {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>padding: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>gap: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.btn {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>padding: 12px 20px;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>.message-box {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>font-size: 1rem;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>min-height: 50px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1 class="text-3xl font-bold text-gray-800 mb-4"&gt;Toy Train Ticket Validator&lt;/h1&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="text-gray-600 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Generate a real or fake ticket. Scan the QR code with your phone's camera.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>If it's a real ticket, you'll hear a "ding"! If it's fake, prepare for the "fire alarm"!</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="flex flex-col sm:flex-row justify-center gap-4 mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="generateRealBtn" class="btn btn-real"&gt;Generate Real Ticket&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button id="generateFakeBtn" class="btn btn-fake"&gt;Generate Fake Ticket&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="qr-code-display mb-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;h2 class="text-xl font-semibold text-gray-700 mb-3" id="qrTitle"&gt;&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;canvas id="qrCanvas" class="w-full max-w-xs mx-auto"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;img id="qrImage" alt="QR Code" class="hidden w-full max-w-xs mx-auto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="messageBox" class="message-box"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Generate a ticket to begin!</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Initialize Firebase variables (provided by Canvas environment)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// These variables are typically injected by the Canvas environment.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// For local GitHub hosting, they won't be defined, which is fine as</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// this app doesn't rely on Firebase for its core functionality.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Ensure Tone.js is initialized</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let initializedTone = false;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>async function initializeAudioContext() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (!initializedTone) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>await Tone.start();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>console.log("AudioContext initialized.");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>initializedTone = true;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Create a simple ding sound (like an airport boarding pass scan)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const dingSynth = new Tone.Synth().toDestination();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>function playDingSound() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>initializeAudioContext().then(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dingSynth.triggerAttackRelease("C5", "8n"); // C5 note for an 8th note duration</p>
+<p class="p1"><span class="Apple-converted-space">                </span>dingSynth.triggerAttackRelease("G5", "8n", Tone.now() + 0.1); // G5 note slightly after</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}).catch(e =&gt; console.error("Error playing ding sound:", e));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Create a simple fire alarm sound (more jarring)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const alarmSynth = new Tone.Synth({</p>
+<p class="p1"><span class="Apple-converted-space">            </span>oscillator: { type: "sawtooth" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>envelope: {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>attack: 0.01,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>decay: 0.1,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>sustain: 0.5,</p>
+<p class="p1"><span class="Apple-converted-space">                </span>release: 0.5,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}).toDestination();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function playFireAlarmSound() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>initializeAudioContext().then(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const now = Tone.now();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>alarmSynth.triggerAttackRelease("C4", "0.5", now);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>alarmSynth.triggerAttackRelease("C#4", "0.5", now + 0.5);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>alarmSynth.triggerAttackRelease("C4", "0.5", now + 1);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>alarmSynth.triggerAttackRelease("C#4", "0.5", now + 1.5);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}).catch(e =&gt; console.error("Error playing fire alarm sound:", e));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Get DOM elements</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const generateRealBtn = document.getElementById('generateRealBtn');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const generateFakeBtn = document.getElementById('generateFakeBtn');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const qrCanvas = document.getElementById('qrCanvas');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const qrImage = document.getElementById('qrImage');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const qrTitle = document.getElementById('qrTitle');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const messageBox = document.getElementById('messageBox');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Initialize QRious</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const qr = new QRious({</p>
+<p class="p1"><span class="Apple-converted-space">            </span>element: qrCanvas,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>size: 200,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 10,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>value: 'Initial QR code value'</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/**</p>
+<p class="p1"><span class="Apple-converted-space">         </span>* Generates and displays a QR code based on the ticket type.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>* The QR code content is a URL pointing back to this page with a 'type' parameter.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>* @param {string} type - 'real' or 'fake'</p>
+<p class="p1"><span class="Apple-converted-space">         </span>*/</p>
+<p class="p1"><span class="Apple-converted-space">        </span>function generateTicketQR(type) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Construct the URL that will be embedded in the QR code.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// When hosted on GitHub Pages, window.location.origin will be your GitHub Pages URL.</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const baseUrl = window.location.origin + window.location.pathname;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ticketId = type === 'real' ? `REAL_TRAIN_TICKET_${Date.now()}` : `FAKE_TRAIN_TICKET_${Date.now()}`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const qrContent = `${baseUrl}?type=${type}&amp;id=${ticketId}`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>qr.value = qrContent;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>qrImage.src = qrCanvas.toDataURL(); // Convert canvas to image data URL</p>
+<p class="p1"><span class="Apple-converted-space">            </span>qrImage.classList.remove('hidden'); // Show the image</p>
+<p class="p1"><span class="Apple-converted-space">            </span>qrCanvas.classList.add('hidden'); // Hide the canvas (image is better for display)</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>qrTitle.textContent = `Scan this ${type === 'real' ? 'Real' : 'Fake'} Ticket QR Code!`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>messageBox.textContent = `QR Code for ${type === 'real' ? 'Real' : 'Fake'} Ticket generated. Scan it with your phone!`;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>messageBox.classList.remove('real', 'fake'); // Clear previous styles</p>
+<p class="p1"><span class="Apple-converted-space">            </span>messageBox.classList.add('bg-blue-100', 'text-blue-800', 'border-blue-200'); // Neutral message box style</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Event listeners for buttons</p>
+<p class="p1"><span class="Apple-converted-space">        </span>generateRealBtn.addEventListener('click', () =&gt; generateTicketQR('real'));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>generateFakeBtn.addEventListener('click', () =&gt; generateTicketQR('fake'));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/**</p>
+<p class="p1"><span class="Apple-converted-space">         </span>* Checks the URL parameters on page load to simulate ticket validation.</p>
+<p class="p1"><span class="Apple-converted-space">         </span>*/</p>
+<p class="p1"><span class="Apple-converted-space">        </span>function checkTicketValidation() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const urlParams = new URLSearchParams(window.location.search);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ticketType = urlParams.get('type');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const ticketId = urlParams.get('id');</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (ticketType) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (ticketType === 'real') {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>messageBox.textContent = `REAL Ticket Validated! ID: ${ticketId || 'N/A'}`;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-200', 'fake');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>messageBox.classList.add('real');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>playDingSound();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else if (ticketType === 'fake') {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>messageBox.textContent = `FAKE Ticket Detected! ALARM! ID: ${ticketId || 'N/A'}`;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>messageBox.classList.remove('bg-blue-100', 'text-blue-800', 'border-blue-200', 'real');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>messageBox.classList.add('fake');</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>playFireAlarmSound();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Clear the URL parameters after processing to avoid re-triggering on refresh</p>
+<p class="p1"><span class="Apple-converted-space">                </span>history.replaceState({}, document.title, window.location.pathname);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Run validation check on page load</p>
+<p class="p1"><span class="Apple-converted-space">        </span>window.addEventListener('load', () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>checkTicketValidation();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Hide canvas initially, show image</p>
+<p class="p1"><span class="Apple-converted-space">            </span>qrCanvas.classList.add('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>qrImage.classList.remove('hidden');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>qrImage.src = qrCanvas.toDataURL(); // Initial empty QR code image</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Initialize Tone.js on user interaction to bypass browser autoplay policies</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.body.addEventListener('click', initializeAudioContext, { once: true });</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.body.addEventListener('touchstart', initializeAudioContext, { once: true });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
